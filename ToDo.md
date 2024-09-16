@@ -2,7 +2,7 @@
 
 - [x] Install and set up Nextjs, create project
 - [x] Code for navbar - 1odcinek minuta 56
-- [ ] Categories on the front page
+- [x] Categories on the front page
 - [ ] List properties on the front page (static)
 - [ ] Detail page for properties (static)
 - [ ] Landlord page (static)
