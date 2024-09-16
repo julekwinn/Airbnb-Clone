@@ -4,10 +4,11 @@ interface ModalProps {
   label: string;
   content: React.ReactElement;
   isOpen: boolean;
-  onClose: () => void;
+  onClose: () => void; // Changed from 'close' to 'onClose'
 }
 
 const Modal: React.FC<ModalProps> = ({ label, content, isOpen, onClose }) => {
+  // Changed 'Close' to 'onClose'
   const [showModal, setShowModal] = useState(isOpen);
 
   useEffect(() => {
@@ -17,9 +18,9 @@ const Modal: React.FC<ModalProps> = ({ label, content, isOpen, onClose }) => {
   const handleClose = useCallback(() => {
     setShowModal(false);
     setTimeout(() => {
-      onClose();
+      onClose(); // Changed from 'close()' to 'onClose()'
     }, 300);
-  }, [onClose]);
+  }, [onClose]); // Changed dependency from 'close' to 'onClose'
 
   if (!showModal) {
     return null;
