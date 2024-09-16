@@ -1,5 +1,4 @@
-import PropertyListItem from "@/app/PropertyListItem";
-
+import PropertyListItem from "./PropertyListItem";
 const PropertyList = () => {
   return (
     <>
