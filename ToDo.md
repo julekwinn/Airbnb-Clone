@@ -7,7 +7,7 @@
 - [x] Detail page for properties (static) - end of 1 video
 - [x] Landlord page (static) 12m 2video
 - [x] My reservations (static)
-- [ ] My properties (static)
+- [x] My properties (static)
 - [ ] Inbox page (static)
 - [ ] Detail page for chat (static)
 - [ ] User menu popup
