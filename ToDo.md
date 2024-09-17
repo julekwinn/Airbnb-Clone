@@ -8,12 +8,12 @@
 - [x] Landlord page (static) 12m 2video
 - [x] My reservations (static)
 - [x] My properties (static)
-- [ ] Inbox page (static)
-- [ ] Detail page for chat (static)
-- [ ] User menu popup
-- [ ] Create reusable modal window
-- [ ] Log in modal (remember error codes)
-- [ ] Sign up modal (remember error codes)
+- [x] Inbox page (static)
+- [x] Detail page for chat (static)
+- [x] User menu popup
+- [x] Create reusable modal window
+- [x] Log in modal (remember error codes)
+- [x] Sign up modal (remember error codes)
 - [ ] Set up docker for django with postgresql, etc
   - [ ] Install DRF, cors headers, etc.
   - [ ] Create user model / config
