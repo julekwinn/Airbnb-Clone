@@ -12,7 +12,7 @@ then
     echo "PostgreSQL started"
 fi
 
-python manage.y makemigrations
+python manage.py makemigrations
 python manage.py migrate
 
 exec "$@"

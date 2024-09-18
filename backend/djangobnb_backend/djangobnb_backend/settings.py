@@ -80,6 +80,7 @@ INSTALLED_APPS = [
     
     'allauth',
     'allauth.account',
+    'allauth.socialaccount',  # Dodaj tę linię
     
     'dj_rest_auth',
     'dj_rest_auth.registration',
@@ -89,6 +90,7 @@ INSTALLED_APPS = [
     "useraccount",
     "property",
 ]
+SOCIALACCOUNT_PROVIDERS = {}
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",

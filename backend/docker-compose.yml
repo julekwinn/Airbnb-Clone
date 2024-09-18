@@ -1,7 +1,7 @@
 services:
   web:
     build: ./djangobnb_backend
-    command: python3 manage.py runserver 0.0.0.0:8000
+    command: python manage.py runserver 0.0.0.0:8000
     volumes:
       - ./djangobnb_backend/:/usr/src/djangobnb_backend/
     ports:
