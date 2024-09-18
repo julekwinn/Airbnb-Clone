@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import PropertyListItem from "./PropertyListItem";
+import apiServices from "@/app/services/apiService";
 
 export type PropertyType = {
   id: string;
@@ -13,15 +14,10 @@ const PropertyList = () => {
   const [properties, setProperties] = useState<PropertyType[]>([]);
 
   const getProperties = async () => {
-    const url = "http://localhost:8000/api/properties/";
-    try {
-      const response = await fetch(url, { method: "GET" });
-      const responseData = await response.json();
-      console.log(responseData);
-      setProperties(responseData.data);
-    } catch (error) {
-      console.error("Błąd podczas pobierania danych:", error);
-    }
+    const url = "/api/properties/";
+    const tmpProperties = await apiServices.get(url);
+
+    setProperties(tmpProperties.data);
   };
 
   useEffect(() => {
