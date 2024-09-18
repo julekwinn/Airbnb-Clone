@@ -1,11 +1,11 @@
 "use client";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import CustomButton from "../forms/CustomButton";
 import Modal from "./Modal";
 import useLoginModal from "@/app/hooks/useLoginModal";
-import { useRouter } from "next/navigation";
 import apiServices from "@/app/services/apiService";
 import { handleLogin } from "@/app/services/actions";
-import { useState } from "react";
 
 const LoginModal = () => {
   const router = useRouter();
@@ -13,40 +13,54 @@ const LoginModal = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const submitLogin = async () => {
-    const formData = {
-      email: email,
-      password: password,
-    };
+    setIsLoading(true);
+    setErrors([]);
 
-    const response = await apiServices.post("/api/auth/login/", formData);
+    try {
+      const formData = { email, password };
+      const response = await apiServices.post("/api/auth/login/", formData);
 
-    if (response.access) {
-      handleLogin(response.user.pk, response.access, response.refresh);
-      loginModal.close();
-      router.push("/");
-    } else {
-      setErrors(response.non_field_errors);
+      if (response.access) {
+        await handleLogin(response.user.pk, response.access, response.refresh);
+        loginModal.close();
+        router.refresh(); // Force a refresh of the page
+      } else {
+        setErrors(response.non_field_errors || ["Login failed"]);
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      setErrors(["An unexpected error occurred"]);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const content = (
     <>
-      {" "}
       <h2 className="mb-6 text-2xl">Welcome to Djangobnb, please log in</h2>
-      <form className="space-y-4" action={submitLogin}>
+      <form
+        className="space-y-4"
+        onSubmit={(e) => {
+          e.preventDefault();
+          submitLogin();
+        }}
+      >
         <input
           onChange={(e) => setEmail(e.target.value)}
           type="email"
           className="w-full h-[54px] px-4 border border-gray-300 rounded-xl"
           placeholder="Your email address"
+          disabled={isLoading}
         />
         <input
           onChange={(e) => setPassword(e.target.value)}
           type="password"
           className="w-full h-[54px] px-4 border border-gray-300 rounded-xl"
           placeholder="Your password"
+          disabled={isLoading}
         />
         {errors.map((error, index) => (
           <div
@@ -56,7 +70,10 @@ const LoginModal = () => {
             {error}
           </div>
         ))}
-        <CustomButton label="Submit" onClick={submitLogin} />{" "}
+        <CustomButton
+          label={isLoading ? "Logging in..." : "Submit"}
+          onClick={submitLogin}
+        />
       </form>
     </>
   );
@@ -64,7 +81,7 @@ const LoginModal = () => {
   return (
     <Modal
       isOpen={loginModal.isOpen}
-      onClose={loginModal.close} // Changed from 'close' to 'onClose'
+      onClose={loginModal.close}
       label="Log in"
       content={content}
     />

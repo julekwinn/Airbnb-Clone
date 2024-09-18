@@ -1,10 +1,11 @@
 "use server";
 import { validateHeaderValue } from "http";
+
 import { cookies } from "next/headers";
 
 export async function handleLogin(
   userId: string,
-  accesToken: string,
+  accessToken: string,
   refreshToken: string
 ) {
   cookies().set("session_userid", userId, {
@@ -13,20 +14,21 @@ export async function handleLogin(
     maxAge: 60 * 60 * 24 * 7, // 1 week
     path: "/",
   });
-
-  cookies().set("session_access_token", accesToken, {
+  cookies().set("session_access_token", accessToken, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     maxAge: 60 * 60, // 1 hour
     path: "/",
   });
-
   cookies().set("session_refresh_token", refreshToken, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     maxAge: 60 * 60 * 24 * 7, // 1 week
     path: "/",
   });
+
+  // Return a value to indicate success
+  return { success: true };
 }
 
 export async function resetAuthCookies() {
