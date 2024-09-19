@@ -12,6 +12,7 @@ import apiServices from "@/app/services/apiService";
 const AddPropertyModal = () => {
   const addPropertyModal = useAddPropertyModal();
   const [currentStep, setCurrentStep] = useState(1);
+  const [errors, setErrors] = useState<string[]>([]);
   const [dataTitle, setDataTitle] = useState("");
   const [dataDescription, setDataDescription] = useState("");
   const [dataCategory, setDataCategory] = useState("");
@@ -50,23 +51,24 @@ const AddPropertyModal = () => {
     formData.append("country_code", dataCountry.value);
     formData.append("image", dataImage);
 
-    try {
-      const response = await apiServices.post(
-        "/api/properties/create/",
-        formData
-      );
+    const response = await apiServices.post(
+      "/api/properties/create/",
+      formData
+    );
 
-      if (response.success) {
-        console.log("Property added");
-        router.push("/");
-        addPropertyModal.close();
-      } else {
-        console.error("Failed to add property:", response.errors);
-      }
-    } catch (error) {
-      console.error("Error submitting form:", error);
+    if (response.success) {
+      console.log("Property added");
+      router.push("/");
+      addPropertyModal.close();
+    } else {
+      console.error("Failed to add property:", response.errors);
+      const tmpErrors = Object.values(response.errors).flatMap((error) =>
+        Array.isArray(error) ? error : [error]
+      );
+      setErrors(tmpErrors);
     }
   };
+
   const setImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       const tmpImage = e.target.files[0];
@@ -216,6 +218,17 @@ const AddPropertyModal = () => {
                 </div>
               )}
             </div>
+
+            {errors.map((error, index) => {
+              return (
+                <div
+                  key={index}
+                  className="p-5 mb-4 bg-airbnb text-white rounded-xl opacity-80"
+                >
+                  {error}
+                </div>
+              );
+            })}
 
             <CustomButton
               className="mb-2 bg-black hover:bg-gray-800"
