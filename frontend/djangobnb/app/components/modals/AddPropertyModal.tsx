@@ -6,6 +6,7 @@ import useAddPropertyModal from "@/app/hooks/useAddPropertyModal";
 import CustomButton from "../forms/CustomButton";
 import Categories from "../addproperty/Categories";
 import SelectCountry, { SelectCountryValue } from "../forms/SelectCountry";
+import Image from "next/image";
 
 const AddPropertyModal = () => {
   const addPropertyModal = useAddPropertyModal();
@@ -18,6 +19,14 @@ const AddPropertyModal = () => {
   const [dataBathrooms, setDataBathrooms] = useState("");
   const [dataGuests, setDataGuests] = useState("");
   const [dataCountry, setDataCountry] = useState<SelectCountryValue>();
+  const [dataImage, setDataImage] = useState<File | null>(null);
+
+  const setImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const tmpImage = e.target.files[0];
+      setDataImage(tmpImage);
+    }
+  };
 
   const setCategory = (category: string) => {
     setDataCategory(category);
@@ -142,6 +151,35 @@ const AddPropertyModal = () => {
               onClick={() => setCurrentStep(3)}
             />
             <CustomButton label="Next" onClick={() => setCurrentStep(5)} />
+          </>
+        ) : currentStep == 5 ? (
+          <>
+            <h2 className="mb-6 text-2xl">Image</h2>
+            <div className="pt-3 pb-6 space-y-4">
+              <div className="py-4 px-6 bg-gray-600 text-white rounded-xl">
+                <input type="file" accept="image/*" onChange={setImage} />
+              </div>
+              {dataImage && (
+                <div className="w-[200px] h-[150px] relative">
+                  <Image
+                    fill
+                    alt="uplauded image"
+                    src={URL.createObjectURL(dataImage)}
+                    className="w-full h-full object-cover rounded-xl"
+                  />
+                </div>
+              )}
+            </div>
+
+            <CustomButton
+              className="mb-2 bg-black hover:bg-gray-800"
+              label="Previous"
+              onClick={() => setCurrentStep(4)}
+            />
+            <CustomButton
+              label="Submit"
+              onClick={() => console.log("Submit")}
+            />
           </>
         ) : (
           <>frgds </>
