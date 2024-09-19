@@ -1,45 +1,37 @@
 "use client";
-import Image from "next/image";
+
+import { useState } from "react";
 import Modal from "./Modal";
 import useAddPropertyModal from "@/app/hooks/useAddPropertyModal";
-import LoginModal from "./LoginModal";
 import CustomButton from "../forms/CustomButton";
-import { useState } from "react";
-
+import Categories from "../addproperty/Categories";
 const AddPropertyModal = () => {
   const addPropertyModal = useAddPropertyModal();
-
   const [currentStep, setCurrentStep] = useState(1);
 
+  const [dataCategory, setDataCategory] = useState("");
+
+  const setCategory = (category: string) => {
+    setDataCategory(category);
+  };
+
   const renderStepContent = () => {
-    switch (currentStep) {
-      case 1:
-        return (
+    return (
+      <>
+        {currentStep === 1 ? (
           <>
-            <h2 className="mb-6 text-2xl">Choose category</h2>
+            <h2 className="mb-6 text-2xl">Choose Category</h2>
+            <Categories
+              dataCategory={dataCategory}
+              setCategory={(category) => setCategory(category)}
+            />
             <CustomButton label="Next" onClick={() => setCurrentStep(2)} />
           </>
-        );
-      case 2:
-        return (
-          <>
-            <h2 className="mb-6 text-2xl">Enter property details</h2>
-            <CustomButton label="Next" onClick={() => setCurrentStep(3)} />
-          </>
-        );
-      case 3:
-        return (
-          <>
-            <h2 className="mb-6 text-2xl">Upload photos</h2>
-            <CustomButton
-              label="Finish"
-              onClick={() => addPropertyModal.close()}
-            />
-          </>
-        );
-      default:
-        return <div />;
-    }
+        ) : (
+          <p>Step 2</p>
+        )}
+      </>
+    );
   };
 
   return (
