@@ -8,6 +8,7 @@ import Categories from "../addproperty/Categories";
 import SelectCountry, { SelectCountryValue } from "../forms/SelectCountry";
 import Image from "next/image";
 import apiServices from "@/app/services/apiService";
+
 const AddPropertyModal = () => {
   const addPropertyModal = useAddPropertyModal();
   const [currentStep, setCurrentStep] = useState(1);
@@ -18,45 +19,54 @@ const AddPropertyModal = () => {
   const [dataBedrooms, setDataBedrooms] = useState("");
   const [dataBathrooms, setDataBathrooms] = useState("");
   const [dataGuests, setDataGuests] = useState("");
-  const [dataCountry, setDataCountry] = useState<SelectCountryValue>();
+  const [dataCountry, setDataCountry] = useState<
+    SelectCountryValue | undefined
+  >();
   const [dataImage, setDataImage] = useState<File | null>(null);
   const router = useRouter();
 
   const SubmitForm = async () => {
-    console.log("Submit");
+    if (
+      !dataCategory ||
+      !dataTitle ||
+      !dataDescription ||
+      !dataPrice ||
+      !dataCountry ||
+      !dataImage
+    ) {
+      console.error("Please fill in all required fields");
+      return;
+    }
 
-    if (dataTitle && dataDescription && dataPrice && dataCountry && dataImage) {
-      const formData = new FormData();
-      formData.append("category", dataCategory);
-      formData.append("title", dataTitle);
-      formData.append("description", dataDescription);
-      formData.append("price_per_night", dataPrice);
-      formData.append("bedrooms", dataBedrooms);
-      formData.append("bathrooms", dataBathrooms);
-      formData.append("guests", dataGuests);
-      formData.append("country", dataCountry.label);
-      formData.append("country_code", dataCountry.value);
-      formData.append("image", dataImage);
+    const formData = new FormData();
+    formData.append("category", dataCategory);
+    formData.append("title", dataTitle);
+    formData.append("description", dataDescription);
+    formData.append("price_per_night", dataPrice);
+    formData.append("bedrooms", dataBedrooms);
+    formData.append("bathrooms", dataBathrooms);
+    formData.append("guests", dataGuests);
+    formData.append("country", dataCountry.label);
+    formData.append("country_code", dataCountry.value);
+    formData.append("image", dataImage);
 
+    try {
       const response = await apiServices.post(
         "/api/properties/create/",
         formData
       );
 
-      console.log(response);
-
-      if (response.succes) {
+      if (response.success) {
         console.log("Property added");
         router.push("/");
         addPropertyModal.close();
       } else {
-        console.error("Something went wrong");
+        console.error("Failed to add property:", response.errors);
       }
-    } else {
-      console.error("Please fill in all required fields");
+    } catch (error) {
+      console.error("Error submitting form:", error);
     }
   };
-
   const setImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       const tmpImage = e.target.files[0];
