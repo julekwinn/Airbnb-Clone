@@ -3,7 +3,7 @@ from django.http import JsonResponse
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from .forms import PropertyForm
 from .models import Property, Reservation
-from .serializers import PropertiesListSerializer, PropertiesDetailSerializer
+from .serializers import PropertiesListSerializer, PropertiesDetailSerializer, ReservationListSerializer
 
 
 @api_view(['GET'])
@@ -64,7 +64,19 @@ def book_property(request, pk):
             created_by=request.user
         )
         
+        return JsonResponse({'success': True})
+        
     except Exception as e:
         print(f"Error: {str(e)}")
         return JsonResponse({'error': str(e)}, status=400)
         
+@api_view(['GET'])
+@authentication_classes([])
+@permission_classes([])
+def property_reservations(request, pk):
+    property = Property.objects.get(pk=pk)
+    reservations = property.reservations.all()
+    
+    serializer = ReservationListSerializer(reservations, many=True)
+    
+    return JsonResponse(serializer.data, safe=False)
