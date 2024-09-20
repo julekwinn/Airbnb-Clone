@@ -12,5 +12,6 @@ urlpatterns = [
     path("user/", UserDetailsView.as_view(), name="user"),
     path("token/refresh/", get_refresh_view().as_view(), name="token_refresh"),
     path("token/verify/", TokenVerifyView.as_view(), name="token_verify"),
-    path('<uuid:pk>/', api.landlord_detail, name='api_landlord_detail')
+    path('<uuid:pk>/', api.landlord_detail, name='api_landlord_detail'),
+    path('myreservations/', api.reservation_list, name='api_reservation_list')
 ]
